@@ -73,8 +73,8 @@ class AddrMap:
         output += "  output logic [{}:0] {}_we_o,\n".format(i[1]-1, i[0])
         output += "  output logic [{}:0] {}_re_o,\n".format(i[1]-1, i[0])
     output += "  // Bus Interface\n"
-    output += "  input  reg_intf::reg_intf_req_a32_d32 req_i,\n"
-    output += "  output reg_intf::reg_intf_resp_d32    resp_o\n"
+    output += "  input  reg_intf_pkg::req_a32_d32 req_i,\n"
+    output += "  output reg_intf_pkg::resp_d32    resp_o\n"
     output += ");\n"
     output += "always_comb begin\n"
     output += "  resp_o.ready = 1'b1;\n"

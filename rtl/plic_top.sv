@@ -7,8 +7,8 @@ module plic_top #(
   input  logic clk_i,    // Clock
   input  logic rst_ni,  // Asynchronous reset active low
   // Bus Interface
-  input  reg_intf::reg_intf_req_a32_d32 req_i,
-  output reg_intf::reg_intf_resp_d32    resp_o,
+  input  reg_intf_pkg::req_a32_d32 req_i,
+  output reg_intf_pkg::rsp_d32    resp_o,
   input logic [N_SOURCE-1:0] le_i, // 0:level 1:edge
   // Interrupt Sources
   input  logic [N_SOURCE-1:0] irq_sources_i,
