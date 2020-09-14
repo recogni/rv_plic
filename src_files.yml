@@ -1,0 +1,13 @@
+rv_plic:
+    files:
+        - rtl/tlul_pkg.sv
+        - rtl/prim_subreg_ext.sv
+        - rtl/plic_regmap.sv
+        - rtl/plic_top.sv
+        - rtl/top_pkg.sv
+        - rtl/rv_plic_reg_pkg.sv
+        - rtl/prim_subreg.sv
+        - rtl/rv_plic_reg_top.sv
+        - rtl/rv_plic_gateway.sv
+        - rtl/rv_plic_target.sv
+        - rtl/rv_plic.sv
