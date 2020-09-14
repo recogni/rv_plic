@@ -1,9 +1,9 @@
 rv_plic:
     files:
         - ../ariane/register_interface/src/reg_intf_pkg.sv
+        - rtl/top_pkg.sv
         - rtl/tlul_pkg.sv
         - rtl/rv_plic_reg_pkg.sv
-        - rtl/top_pkg.sv
         - rtl/prim_subreg_ext.sv
         - rtl/plic_regmap.sv
         - rtl/prim_subreg.sv
