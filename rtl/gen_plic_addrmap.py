@@ -134,7 +134,7 @@ if __name__ == "__main__":
   parser.add_argument("-p", "--max_priority", metavar="MaxPriority", help="maximum number of priority (default 7)", default=7)
   args = parser.parse_args()
 
-  plic_base = 0xC000000
+  plic_base = 0x0000000
 
   if args.nr_targets:
     nr_target = int(args.nr_targets)
@@ -155,8 +155,8 @@ if __name__ == "__main__":
   assert nr_target <= MAX_DEVICES, "Maximum allowed targets are {}".format(MAX_DEVICES)
 
   priorityBase = plic_base + 0x0
-  enableBase = plic_base + 0x2000
-  hartBase = plic_base + 0x200000
+  enableBase   = plic_base + 0x2000
+  hartBase     = plic_base + 0x8000
 
   def pendingAddr(i):
     return plic_base + 0x1000
