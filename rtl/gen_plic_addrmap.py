@@ -151,7 +151,7 @@ if __name__ == "__main__":
   source_width = clog2(nr_src_eff)
   addrmap = AddrMap("plic_regs", "PLIC Address Map")
 
-  assert nr_src <= 31, "Not more than 31 interrupt sources are supported at the moment"
+  assert nr_src <= 127, "Not more than 127 interrupt sources are supported at the moment"
   assert nr_target <= MAX_DEVICES, "Maximum allowed targets are {}".format(MAX_DEVICES)
 
   priorityBase = plic_base + 0x0
