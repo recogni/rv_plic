@@ -20,7 +20,7 @@ module plic_regs (
   output logic [1:0] cc_re_o,
   // Bus Interface
   input  reg_intf_pkg::req_a32_d32 req_i,
-  output reg_intf_pkg::resp_d32    resp_o
+  output reg_intf_pkg::rsp_d32     resp_o
 );
 always_comb begin
   resp_o.ready = 1'b1;
