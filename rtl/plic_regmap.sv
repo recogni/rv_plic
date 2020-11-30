@@ -29,6 +29,7 @@ always_comb begin
   prio_o = '0;
   prio_we_o = '0;
   prio_re_o = '0;
+  ip_re_o = '0;
   ie_o = '0;
   ie_we_o = '0;
   ie_re_o = '0;
@@ -689,37 +690,37 @@ always_comb begin
         // ie
         32'h2004: begin
           ie_o[0][63:32] = req_i.wdata[31:0];
-          ie_we_o[1] = 1'b1;
+          ie_we_o[0] = 1'b1;
         end
         // ie
         32'h2008: begin
           ie_o[0][95:64] = req_i.wdata[31:0];
-          ie_we_o[2] = 1'b1;
+          ie_we_o[0] = 1'b1;
         end
         // ie
         32'h200c: begin
           ie_o[0][127:96] = req_i.wdata[31:0];
-          ie_we_o[3] = 1'b1;
+          ie_we_o[0] = 1'b1;
         end
         // ie
         32'h2080: begin
           ie_o[1][31:0] = req_i.wdata[31:0];
-          ie_we_o[4] = 1'b1;
+          ie_we_o[1] = 1'b1;
         end
         // ie
         32'h2084: begin
           ie_o[1][63:32] = req_i.wdata[31:0];
-          ie_we_o[5] = 1'b1;
+          ie_we_o[1] = 1'b1;
         end
         // ie
         32'h2088: begin
           ie_o[1][95:64] = req_i.wdata[31:0];
-          ie_we_o[6] = 1'b1;
+          ie_we_o[1] = 1'b1;
         end
         // ie
         32'h208c: begin
           ie_o[1][127:96] = req_i.wdata[31:0];
-          ie_we_o[7] = 1'b1;
+          ie_we_o[1] = 1'b1;
         end
         // threshold
         32'h8000: begin
@@ -1393,17 +1394,17 @@ always_comb begin
         // ip
         32'h1004: begin
           resp_o.rdata[31:0] = ip_i[0][63:32];
-          ip_re_o[1] = 1'b1;
+          ip_re_o[0] = 1'b1;
         end
         // ip
         32'h1008: begin
           resp_o.rdata[31:0] = ip_i[0][95:64];
-          ip_re_o[2] = 1'b1;
+          ip_re_o[0] = 1'b1;
         end
         // ip
         32'h100c: begin
           resp_o.rdata[31:0] = ip_i[0][127:96];
-          ip_re_o[3] = 1'b1;
+          ip_re_o[0] = 1'b1;
         end
         // ie
         32'h2000: begin
@@ -1413,37 +1414,37 @@ always_comb begin
         // ie
         32'h2004: begin
           resp_o.rdata[31:0] = ie_i[0][63:32];
-          ie_re_o[1] = 1'b1;
+          ie_re_o[0] = 1'b1;
         end
         // ie
         32'h2008: begin
           resp_o.rdata[31:0] = ie_i[0][95:64];
-          ie_re_o[2] = 1'b1;
+          ie_re_o[0] = 1'b1;
         end
         // ie
         32'h200c: begin
           resp_o.rdata[31:0] = ie_i[0][127:96];
-          ie_re_o[3] = 1'b1;
+          ie_re_o[0] = 1'b1;
         end
         // ie
         32'h2080: begin
           resp_o.rdata[31:0] = ie_i[1][31:0];
-          ie_re_o[4] = 1'b1;
+          ie_re_o[1] = 1'b1;
         end
         // ie
         32'h2084: begin
           resp_o.rdata[31:0] = ie_i[1][63:32];
-          ie_re_o[5] = 1'b1;
+          ie_re_o[1] = 1'b1;
         end
         // ie
         32'h2088: begin
           resp_o.rdata[31:0] = ie_i[1][95:64];
-          ie_re_o[6] = 1'b1;
+          ie_re_o[1] = 1'b1;
         end
         // ie
         32'h208c: begin
           resp_o.rdata[31:0] = ie_i[1][127:96];
-          ie_re_o[7] = 1'b1;
+          ie_re_o[1] = 1'b1;
         end
         // threshold
         32'h8000: begin

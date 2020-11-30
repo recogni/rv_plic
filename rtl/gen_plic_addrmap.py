@@ -89,7 +89,7 @@ class AddrMap:
       if i[3] != Access.RO:
         output += "  {}_o = '0;\n".format(i[0])
         output += "  {}_we_o = '0;\n".format(i[0])
-        output += "  {}_re_o = '0;\n".format(i[0])
+      output += "  {}_re_o = '0;\n".format(i[0])
     output += "  if (req_i.valid) begin\n"
     output += "    if (req_i.write) begin\n"
     output += "      unique case(req_i.addr)\n"
@@ -102,7 +102,7 @@ class AddrMap:
         output += "        // {}\n".format(i.name)
         output += "        {}'h{}: begin\n".format(self.access_width, hex(i.addr)[2:])
         output += "          {}_o[{}][{}:{}] = req_i.wdata[{}:{}];\n".format(i.name, i.index, i.msb, i.lsb, i.width-1, 0)
-        output += "          {}_we_o[{}] = 1'b1;\n".format(i.name, j)
+        output += "          {}_we_o[{}] = 1'b1;\n".format(i.name, i.index)
         output += "        end\n"
         j += 1
         last_name = i.name
@@ -118,7 +118,7 @@ class AddrMap:
       output += "        // {}\n".format(i.name)
       output += "        {}'h{}: begin\n".format(self.access_width, hex(i.addr)[2:])
       output += "          resp_o.rdata[{}:0] = {}_i[{}][{}:{}];\n".format(i.width - 1, i.name, i.index, i.msb, i.lsb)
-      output += "          {}_re_o[{}] = 1'b1;\n".format(i.name, j)
+      output += "          {}_re_o[{}] = 1'b1;\n".format(i.name, i.index)
       output += "        end\n"
       j += 1
       last_name = i.name
