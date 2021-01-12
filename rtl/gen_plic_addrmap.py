@@ -17,16 +17,19 @@ class Access(Enum):
 class AddrMapEntry(object):
 
   """Represents an Entry in an Address Map"""
-  def __init__(self, addr, name, description, access, width):
+  def __init__(self, addr, name, description, access, width, msb=0, lsb=0, index=0):
     super(AddrMapEntry, self).__init__()
     self.addr = addr
     self.description = description
     self.access = access
     self.width = width
     self.name = name
+    self.msb = msb
+    self.lsb = lsb
+    self.index = index
 
   def __str__(self):
-    return '{} | {} | {} | {}'.format(hex(self.addr), self.width, self.access, self.description)
+    return '{} | {} | {} | {} | {} | {} | {}'.format(hex(self.addr), self.width, self.access, self.description, self.msb, self.lsb, self.index)
 
   def get_list_elem(self):
     return [hex(self.addr), self.width, self.access, self.description]
@@ -43,17 +46,18 @@ class AddrMap:
     # register port
     self.ports.append((name, num, width, access))
     for i in range(0, num):
+      index = i
       effect_addr = addr(i)
       # we need to split the entry into multiple aligned entries as otherwise we would
       # violate the access_width constraints
       if (width / self.access_width) > 1.0:
         for i in range(0, int(ceil(width / self.access_width))):
           if (width - self.access_width * i < self.access_width):
-            self.addrmap.append(AddrMapEntry(effect_addr + int(self.access_width/8) * i,  name, description.format(i), access, width - self.access_width * i))
+            self.addrmap.append(AddrMapEntry(effect_addr + int(self.access_width/8) * i,  name, description.format(i), access, (width - self.access_width * i), self.access_width*i+width, self.access_width*i, index))
           else:
-            self.addrmap.append(AddrMapEntry(effect_addr + int(self.access_width/8) * i,  name, description.format(i), access, self.access_width))
+            self.addrmap.append(AddrMapEntry(effect_addr + int(self.access_width/8) * i,  name, description.format(i), access, self.access_width, self.access_width*(i+1)-1, self.access_width*i, index))
       else:
-        self.addrmap.append(AddrMapEntry(effect_addr, name, description.format(i), access, width))
+        self.addrmap.append(AddrMapEntry(effect_addr, name, description.format(i), access, width, (width-1), 0, index))
 
   def addEntry(self, addr, name, description, access, width):
     self.addEntries(1, addr, name, description, access, width)
@@ -74,8 +78,9 @@ class AddrMap:
         output += "  output logic [{}:0] {}_re_o,\n".format(i[1]-1, i[0])
     output += "  // Bus Interface\n"
     output += "  input  reg_intf_pkg::req_a32_d32 req_i,\n"
-    output += "  output reg_intf_pkg::resp_d32    resp_o\n"
+    output += "  output reg_intf_pkg::rsp_d32     resp_o\n"
     output += ");\n"
+    
     output += "always_comb begin\n"
     output += "  resp_o.ready = 1'b1;\n"
     output += "  resp_o.rdata = '0;\n"
@@ -84,7 +89,7 @@ class AddrMap:
       if i[3] != Access.RO:
         output += "  {}_o = '0;\n".format(i[0])
         output += "  {}_we_o = '0;\n".format(i[0])
-        output += "  {}_re_o = '0;\n".format(i[0])
+      output += "  {}_re_o = '0;\n".format(i[0])
     output += "  if (req_i.valid) begin\n"
     output += "    if (req_i.write) begin\n"
     output += "      unique case(req_i.addr)\n"
@@ -94,9 +99,10 @@ class AddrMap:
       if i.access != Access.RO:
         if last_name != i.name:
           j = 0
+        output += "        // {}\n".format(i.name)
         output += "        {}'h{}: begin\n".format(self.access_width, hex(i.addr)[2:])
-        output += "          {}_o[{}][{}:0] = req_i.wdata[{}:0];\n".format(i.name, j, i.width - 1, i.width - 1)
-        output += "          {}_we_o[{}] = 1'b1;\n".format(i.name, j)
+        output += "          {}_o[{}][{}:{}] = req_i.wdata[{}:{}];\n".format(i.name, i.index, i.msb, i.lsb, i.width-1, 0)
+        output += "          {}_we_o[{}] = 1'b1;\n".format(i.name, i.index)
         output += "        end\n"
         j += 1
         last_name = i.name
@@ -109,9 +115,10 @@ class AddrMap:
     for i in self.addrmap:
       if last_name != i.name:
         j = 0
+      output += "        // {}\n".format(i.name)
       output += "        {}'h{}: begin\n".format(self.access_width, hex(i.addr)[2:])
-      output += "          resp_o.rdata[{}:0] = {}_i[{}][{}:0];\n".format(i.width - 1, i.name, j, i.width - 1)
-      output += "          {}_re_o[{}] = 1'b1;\n".format(i.name, j)
+      output += "          resp_o.rdata[{}:0] = {}_i[{}][{}:{}];\n".format(i.width - 1, i.name, i.index, i.msb, i.lsb)
+      output += "          {}_re_o[{}] = 1'b1;\n".format(i.name, i.index)
       output += "        end\n"
       j += 1
       last_name = i.name
@@ -151,7 +158,7 @@ if __name__ == "__main__":
   source_width = clog2(nr_src_eff)
   addrmap = AddrMap("plic_regs", "PLIC Address Map")
 
-  assert nr_src <= 31, "Not more than 31 interrupt sources are supported at the moment"
+  assert nr_src <= 127, "Not more than 127 interrupt sources are supported at the moment"
   assert nr_target <= MAX_DEVICES, "Maximum allowed targets are {}".format(MAX_DEVICES)
 
   priorityBase = plic_base + 0x0
